@@ -12,7 +12,7 @@ import { z } from "zod";
 
 const loginSchema = z.object({
   email: z.string().trim().email("Ongeldig e-mailadres").max(255, "E-mail te lang"),
-  password: z.string().min(1, "Wachtwoord is verplicht"),
+  password: z.string().min(8, "Wachtwoord moet minstens 8 karakters bevatten").max(128, "Wachtwoord te lang"),
 });
 
 const registerSchema = z.object({

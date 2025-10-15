@@ -20,12 +20,12 @@ const registrationSchema = z.object({
     .min(8, "Wachtwoord moet minstens 8 karakters bevatten")
     .max(128, "Wachtwoord te lang")
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Wachtwoord moet een kleine letter, hoofdletter en cijfer bevatten"),
-  phone: z.string().regex(/^(\+|00)?[0-9]{9,15}$/, "Ongeldig telefoonnummer").optional().or(z.literal('')),
-  street: z.string().max(200, "Straatnaam te lang").optional().or(z.literal('')),
-  houseNumber: z.string().max(10, "Huisnummer te lang").optional().or(z.literal('')),
-  box: z.string().max(10, "Busnummer te lang").optional().or(z.literal('')),
-  postalCode: z.string().regex(/^[0-9]{4}$/, "Ongeldige postcode").optional().or(z.literal('')),
-  city: z.string().max(100, "Gemeente te lang").optional().or(z.literal('')),
+  phone: z.string().trim().regex(/^(\+|00)?[0-9]{9,15}$/, "Ongeldig telefoonnummer").optional().or(z.literal('')),
+  street: z.string().trim().max(200, "Straatnaam te lang").optional().or(z.literal('')),
+  houseNumber: z.string().trim().max(10, "Huisnummer te lang").optional().or(z.literal('')),
+  box: z.string().trim().max(10, "Busnummer te lang").optional().or(z.literal('')),
+  postalCode: z.string().trim().regex(/^[0-9]{4}$/, "Ongeldige postcode").optional().or(z.literal('')),
+  city: z.string().trim().max(100, "Gemeente te lang").optional().or(z.literal('')),
 });
 
 const Registration = () => {

@@ -22,10 +22,41 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+    // Verify the authenticated user owns this consultation
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader) {
+      throw new Error('Unauthorized: No authorization header');
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: userError } = await supabase.auth.getUser(token);
+
+    if (userError || !user) {
+      console.error('Auth error:', userError);
+      throw new Error('Unauthorized: Invalid token');
+    }
+
     const { consultationId, audioPath } = await req.json();
     
     if (!consultationId || !audioPath) {
       throw new Error('consultationId and audioPath are required');
+    }
+
+    // Verify user is the doctor for this consultation
+    const { data: consultation, error: consultationError } = await supabase
+      .from('consultations')
+      .select('doctor_id')
+      .eq('id', consultationId)
+      .single();
+
+    if (consultationError || !consultation) {
+      console.error('Consultation lookup error:', consultationError);
+      throw new Error('Consultation not found');
+    }
+
+    if (consultation.doctor_id !== user.id) {
+      console.error('Ownership mismatch:', { userId: user.id, doctorId: consultation.doctor_id });
+      throw new Error('Unauthorized: You do not own this consultation');
     }
 
     console.log('Downloading audio from storage:', audioPath);
