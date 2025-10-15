@@ -10,6 +10,23 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { z } from 'zod';
+
+const registrationSchema = z.object({
+  firstName: z.string().trim().min(1, "Voornaam is verplicht").max(100, "Voornaam te lang").regex(/^[a-zA-ZÀ-ÿ\s'-]+$/, "Voornaam bevat ongeldige karakters"),
+  lastName: z.string().trim().min(1, "Achternaam is verplicht").max(100, "Achternaam te lang").regex(/^[a-zA-ZÀ-ÿ\s'-]+$/, "Achternaam bevat ongeldige karakters"),
+  email: z.string().trim().email("Ongeldig e-mailadres").max(255, "E-mail te lang"),
+  password: z.string()
+    .min(8, "Wachtwoord moet minstens 8 karakters bevatten")
+    .max(128, "Wachtwoord te lang")
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Wachtwoord moet een kleine letter, hoofdletter en cijfer bevatten"),
+  phone: z.string().regex(/^(\+|00)?[0-9]{9,15}$/, "Ongeldig telefoonnummer").optional().or(z.literal('')),
+  street: z.string().max(200, "Straatnaam te lang").optional().or(z.literal('')),
+  houseNumber: z.string().max(10, "Huisnummer te lang").optional().or(z.literal('')),
+  box: z.string().max(10, "Busnummer te lang").optional().or(z.literal('')),
+  postalCode: z.string().regex(/^[0-9]{4}$/, "Ongeldige postcode").optional().or(z.literal('')),
+  city: z.string().max(100, "Gemeente te lang").optional().or(z.literal('')),
+});
 
 const Registration = () => {
   const navigate = useNavigate();
@@ -64,10 +81,24 @@ const Registration = () => {
     setLoading(true);
     
     try {
-      // Sign up user
+      // Validate input
+      const validation = registrationSchema.safeParse(formData);
+
+      if (!validation.success) {
+        const error = validation.error.errors[0];
+        toast({
+          title: 'Validatiefout',
+          description: error.message,
+          variant: 'destructive',
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Sign up user with validated data
       const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
+        email: validation.data.email,
+        password: validation.data.password,
         options: {
           emailRedirectTo: `${window.location.origin}/`,
         },
@@ -76,17 +107,17 @@ const Registration = () => {
       if (authError) throw authError;
       
       if (authData.user) {
-        // Create profile
+        // Create profile with validated data
         const { error: profileError } = await supabase.from('profiles').insert({
           id: authData.user.id,
-          first_name: formData.firstName,
-          last_name: formData.lastName,
-          phone: formData.phone || null,
-          street: formData.street || null,
-          house_number: formData.houseNumber || null,
-          box: formData.box || null,
-          postal_code: formData.postalCode || null,
-          city: formData.city || null,
+          first_name: validation.data.firstName,
+          last_name: validation.data.lastName,
+          phone: validation.data.phone || null,
+          street: validation.data.street || null,
+          house_number: validation.data.houseNumber || null,
+          box: validation.data.box || null,
+          postal_code: validation.data.postalCode || null,
+          city: validation.data.city || null,
           gp_id: selectedGP?.id || null,
         });
         

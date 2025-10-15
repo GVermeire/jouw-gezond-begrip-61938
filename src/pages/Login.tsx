@@ -8,6 +8,22 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
+
+const loginSchema = z.object({
+  email: z.string().trim().email("Ongeldig e-mailadres").max(255, "E-mail te lang"),
+  password: z.string().min(1, "Wachtwoord is verplicht"),
+});
+
+const registerSchema = z.object({
+  firstName: z.string().trim().min(1, "Voornaam is verplicht").max(100, "Voornaam te lang").regex(/^[a-zA-ZÀ-ÿ\s'-]+$/, "Voornaam bevat ongeldige karakters"),
+  lastName: z.string().trim().min(1, "Achternaam is verplicht").max(100, "Achternaam te lang").regex(/^[a-zA-ZÀ-ÿ\s'-]+$/, "Achternaam bevat ongeldige karakters"),
+  email: z.string().trim().email("Ongeldig e-mailadres").max(255, "E-mail te lang"),
+  password: z.string()
+    .min(8, "Wachtwoord moet minstens 8 karakters bevatten")
+    .max(128, "Wachtwoord te lang")
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Wachtwoord moet een kleine letter, hoofdletter en cijfer bevatten"),
+});
 
 const Login = () => {
   const navigate = useNavigate();
@@ -28,9 +44,26 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      // Validate input
+      const validation = loginSchema.safeParse({
         email: loginEmail,
         password: loginPassword,
+      });
+
+      if (!validation.success) {
+        const error = validation.error.errors[0];
+        toast({
+          title: "Validatiefout",
+          description: error.message,
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: validation.data.email,
+        password: validation.data.password,
       });
 
       if (error) throw error;
@@ -71,16 +104,35 @@ const Login = () => {
     setLoading(true);
 
     try {
+      // Validate input
+      const validation = registerSchema.safeParse({
+        firstName,
+        lastName,
+        email: registerEmail,
+        password: registerPassword,
+      });
+
+      if (!validation.success) {
+        const error = validation.error.errors[0];
+        toast({
+          title: "Validatiefout",
+          description: error.message,
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
       const redirectUrl = `${window.location.origin}/`;
       
       const { data, error } = await supabase.auth.signUp({
-        email: registerEmail,
-        password: registerPassword,
+        email: validation.data.email,
+        password: validation.data.password,
         options: {
           emailRedirectTo: redirectUrl,
           data: {
-            first_name: firstName,
-            last_name: lastName,
+            first_name: validation.data.firstName,
+            last_name: validation.data.lastName,
           }
         }
       });
@@ -88,11 +140,11 @@ const Login = () => {
       if (error) throw error;
 
       if (data.user) {
-        // Create profile
+        // Create profile with validated data
         await supabase.from('profiles').insert({
           id: data.user.id,
-          first_name: firstName,
-          last_name: lastName,
+          first_name: validation.data.firstName,
+          last_name: validation.data.lastName,
         });
 
         // Assign role
