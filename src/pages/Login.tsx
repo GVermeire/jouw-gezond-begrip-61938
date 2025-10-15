@@ -37,12 +37,12 @@ const Login = () => {
 
       if (data.user) {
         // Verify role
-        const { data: roles } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', data.user.id)
-          .eq('role', role as 'patient' | 'doctor')
-          .single();
+          const { data: roles } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', data.user.id)
+            .eq('role', role as 'patient' | 'doctor')
+            .maybeSingle();
 
         if (roles) {
           navigate(role === 'patient' ? '/patient-dashboard' : '/doctor-dashboard');
