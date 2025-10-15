@@ -21,6 +21,7 @@ const DoctorDashboard = () => {
   const [currentConsultation, setCurrentConsultation] = useState<any>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [publishToPatient, setPublishToPatient] = useState(false);
+  const [transcriptResult, setTranscriptResult] = useState<any>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -188,7 +189,18 @@ const DoctorDashboard = () => {
           : "Consultatie getranscribeerd",
       });
 
-      // Reset state
+      // Fetch the updated consultation with transcripts
+      const { data: updatedConsultation } = await supabase
+        .from('consultations')
+        .select('*')
+        .eq('id', currentConsultation.id)
+        .single();
+
+      if (updatedConsultation) {
+        setTranscriptResult(updatedConsultation);
+      }
+
+      // Reset recording state
       reset();
       setCurrentConsultation(null);
       setPublishToPatient(false);
@@ -338,6 +350,43 @@ const DoctorDashboard = () => {
                           >
                             <Upload className="h-4 w-4" />
                             {isProcessing ? "Verwerken..." : "Upload en transcribeer"}
+                          </Button>
+                        </div>
+                      )}
+
+                      {transcriptResult && (
+                        <div className="mt-6 space-y-4 rounded-lg border border-border bg-muted/30 p-4">
+                          <h4 className="font-semibold text-sm">Transcriptie resultaat</h4>
+                          
+                          <div className="space-y-3">
+                            <div>
+                              <p className="text-xs text-muted-foreground mb-1">Volledige transcriptie:</p>
+                              <p className="text-sm">{transcriptResult.transcript}</p>
+                            </div>
+                            
+                            <div>
+                              <p className="text-xs text-muted-foreground mb-1">Eenvoudige samenvatting:</p>
+                              <p className="text-sm">{transcriptResult.summary_simple}</p>
+                            </div>
+                            
+                            <div>
+                              <p className="text-xs text-muted-foreground mb-1">Gedetailleerde samenvatting:</p>
+                              <p className="text-sm">{transcriptResult.summary_detailed}</p>
+                            </div>
+                            
+                            <div>
+                              <p className="text-xs text-muted-foreground mb-1">Technische samenvatting:</p>
+                              <p className="text-sm">{transcriptResult.summary_technical}</p>
+                            </div>
+                          </div>
+
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setTranscriptResult(null)}
+                            className="mt-2"
+                          >
+                            Sluiten
                           </Button>
                         </div>
                       )}
