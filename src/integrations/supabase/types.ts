@@ -87,6 +87,7 @@ export type Database = {
           is_completed: boolean | null
           notes_private: boolean | null
           patient_id: string
+          published_for_patient: boolean | null
           summary_detailed: string | null
           summary_en: Json | null
           summary_fr: Json | null
@@ -111,6 +112,7 @@ export type Database = {
           is_completed?: boolean | null
           notes_private?: boolean | null
           patient_id: string
+          published_for_patient?: boolean | null
           summary_detailed?: string | null
           summary_en?: Json | null
           summary_fr?: Json | null
@@ -135,6 +137,7 @@ export type Database = {
           is_completed?: boolean | null
           notes_private?: boolean | null
           patient_id?: string
+          published_for_patient?: boolean | null
           summary_detailed?: string | null
           summary_en?: Json | null
           summary_fr?: Json | null
