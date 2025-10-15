@@ -1,19 +1,26 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Heart, Settings, LogOut, Mic, MicOff, Search, Calendar } from "lucide-react";
+import { Heart, Settings, LogOut, Mic, MicOff, Search, Calendar, Upload } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
+import { useAudioRecorder } from "@/hooks/useAudioRecorder";
+import { useToast } from "@/hooks/use-toast";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 const DoctorDashboard = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const { isRecording, audioBlob, startRecording, stopRecording, reset } = useAudioRecorder();
   const [selectedPatient, setSelectedPatient] = useState<number | null>(0);
-  const [isRecording, setIsRecording] = useState(false);
-  const [micConnected] = useState(true); // Mock - in production check actual mic status
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const [currentConsultation, setCurrentConsultation] = useState<any>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [publishToPatient, setPublishToPatient] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -89,9 +96,113 @@ const DoctorDashboard = () => {
 
   const currentPatient = patients.find(p => p.id === selectedPatient);
 
-  const handleStartConsultation = () => {
-    if (!micConnected) return;
-    setIsRecording(!isRecording);
+  const handleStartConsultation = async () => {
+    if (isRecording) {
+      // Stop recording
+      stopRecording();
+    } else {
+      try {
+        // Start recording and create consultation record
+        await startRecording();
+        
+        const { data: consultation, error } = await supabase
+          .from('consultations')
+          .insert({
+            patient_id: user.id, // In real app, use selected patient's ID
+            doctor_id: user.id,
+            consultation_date: new Date().toISOString(),
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+        
+        setCurrentConsultation(consultation);
+        
+        toast({
+          title: "Opname gestart",
+          description: "De consultatie wordt opgenomen",
+        });
+      } catch (error) {
+        console.error('Error starting consultation:', error);
+        toast({
+          title: "Fout",
+          description: "Kon opname niet starten",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  const handleUploadAndTranscribe = async () => {
+    if (!audioBlob || !currentConsultation) {
+      toast({
+        title: "Geen audio",
+        description: "Er is geen audio om te uploaden",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsProcessing(true);
+    
+    try {
+      // Upload audio to Supabase Storage
+      const fileName = `${currentConsultation.id}_${Date.now()}.webm`;
+      const { error: uploadError } = await supabase.storage
+        .from('consult-audio')
+        .upload(fileName, audioBlob);
+
+      if (uploadError) throw uploadError;
+
+      // Update consultation with audio path
+      const { error: updateError } = await supabase
+        .from('consultations')
+        .update({ 
+          audio_url: fileName,
+          published_for_patient: publishToPatient
+        })
+        .eq('id', currentConsultation.id);
+
+      if (updateError) throw updateError;
+
+      toast({
+        title: "Audio geüpload",
+        description: "Audio wordt getranscribeerd...",
+      });
+
+      // Call edge function to transcribe
+      const { data, error: transcribeError } = await supabase.functions.invoke('transcribe-consultation', {
+        body: { 
+          consultationId: currentConsultation.id,
+          audioPath: fileName
+        }
+      });
+
+      if (transcribeError) throw transcribeError;
+
+      toast({
+        title: "Klaar!",
+        description: publishToPatient 
+          ? "Consultatie getranscribeerd en gepubliceerd naar patiënt" 
+          : "Consultatie getranscribeerd",
+      });
+
+      // Reset state
+      reset();
+      setCurrentConsultation(null);
+      setPublishToPatient(false);
+      
+    } catch (error) {
+      console.error('Error processing consultation:', error);
+      toast({
+        title: "Fout",
+        description: "Er is een fout opgetreden bij het verwerken",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   if (loading) {
@@ -196,7 +307,7 @@ const DoctorDashboard = () => {
                             : "bg-secondary hover:bg-secondary/90"
                         )}
                         onClick={handleStartConsultation}
-                        disabled={!micConnected}
+                        disabled={isProcessing}
                       >
                         {isRecording ? (
                           <MicOff className="h-10 w-10" />
@@ -205,12 +316,30 @@ const DoctorDashboard = () => {
                         )}
                       </Button>
                       <p className="mt-4 text-sm font-semibold">
-                        {isRecording ? "Opname bezig..." : "Start consultatie"}
+                        {isRecording ? "Stop opname" : "Start opname"}
                       </p>
-                      {!micConnected && (
-                        <p className="mt-2 text-sm text-destructive">
-                          Microfoon niet verbonden
-                        </p>
+                      
+                      {audioBlob && !isRecording && (
+                        <div className="mt-6 space-y-4">
+                          <div className="flex items-center justify-center gap-3">
+                            <Switch 
+                              id="publish-mode" 
+                              checked={publishToPatient}
+                              onCheckedChange={setPublishToPatient}
+                            />
+                            <Label htmlFor="publish-mode" className="text-sm">
+                              Publiceer naar patiëntenportaal
+                            </Label>
+                          </div>
+                          <Button
+                            onClick={handleUploadAndTranscribe}
+                            disabled={isProcessing}
+                            className="gap-2"
+                          >
+                            <Upload className="h-4 w-4" />
+                            {isProcessing ? "Verwerken..." : "Upload en transcribeer"}
+                          </Button>
+                        </div>
                       )}
                     </div>
                   </CardContent>

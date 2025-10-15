@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heart, Calendar, FileText, Settings, LogOut, Download } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -19,6 +20,7 @@ const PatientDashboard = () => {
   const [viewMode, setViewMode] = useState<ViewMode>("simple");
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const [consultations, setConsultations] = useState<any[]>([]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -43,6 +45,19 @@ const PatientDashboard = () => {
       }
 
       setUser(session.user);
+      
+      // Load consultations
+      const { data: consultationsData } = await supabase
+        .from('consultations')
+        .select('*')
+        .eq('patient_id', session.user.id)
+        .eq('published_for_patient', true)
+        .order('consultation_date', { ascending: false });
+      
+      if (consultationsData) {
+        setConsultations(consultationsData);
+      }
+      
       setLoading(false);
     };
 
@@ -139,8 +154,72 @@ const PatientDashboard = () => {
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Main Content */}
           <div className="space-y-6 lg:col-span-2">
-            {/* Last Consultation */}
+            {/* Consultations */}
             <Card>
+              <CardHeader>
+                <CardTitle>Mijn Consultaties</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {consultations.length === 0 ? (
+                  <p className="text-muted-foreground">
+                    U heeft nog geen gepubliceerde consultaties.
+                  </p>
+                ) : (
+                  <div className="space-y-6">
+                    {consultations.map((consult) => (
+                      <Card key={consult.id} className="border-l-4 border-l-primary">
+                        <CardHeader>
+                          <CardTitle className="text-lg">
+                            Consultatie van {new Date(consult.consultation_date).toLocaleDateString('nl-NL', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric'
+                            })}
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <Tabs defaultValue="simple" className="w-full">
+                            <TabsList className="grid w-full grid-cols-3">
+                              <TabsTrigger value="simple">Eenvoudig</TabsTrigger>
+                              <TabsTrigger value="detailed">Gedetailleerd</TabsTrigger>
+                              <TabsTrigger value="technical">Technisch</TabsTrigger>
+                            </TabsList>
+                            <TabsContent value="simple" className="mt-4">
+                              <div className="prose prose-sm max-w-none">
+                                <p className="whitespace-pre-wrap">{consult.summary_simple || 'Geen eenvoudige samenvatting beschikbaar.'}</p>
+                              </div>
+                            </TabsContent>
+                            <TabsContent value="detailed" className="mt-4">
+                              <div className="prose prose-sm max-w-none">
+                                <p className="whitespace-pre-wrap">{consult.summary_detailed || 'Geen gedetailleerde samenvatting beschikbaar.'}</p>
+                              </div>
+                            </TabsContent>
+                            <TabsContent value="technical" className="mt-4">
+                              <div className="prose prose-sm max-w-none">
+                                <p className="whitespace-pre-wrap">{consult.summary_technical || 'Geen technische samenvatting beschikbaar.'}</p>
+                              </div>
+                            </TabsContent>
+                          </Tabs>
+                          {consult.transcript && (
+                            <details className="mt-4">
+                              <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
+                                Bekijk volledige transcriptie
+                              </summary>
+                              <div className="mt-2 rounded-md bg-muted p-4">
+                                <p className="text-sm whitespace-pre-wrap">{consult.transcript}</p>
+                              </div>
+                            </details>
+                          )}
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Last Consultation (old mock data - can be removed) */}
+            <Card className="hidden">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
