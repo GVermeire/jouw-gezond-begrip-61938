@@ -236,8 +236,8 @@ const DoctorDashboard = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Heart className="h-6 w-6 text-secondary" />
-              <span className="text-xl font-semibold">Doktersportaal</span>
+              <Mic className="h-6 w-6 text-primary" />
+              <span className="text-xl font-semibold">Auralis</span>
             </div>
             <div className="flex items-center gap-4">
               <span className="text-sm text-muted-foreground">Dr. Sarah Janssens</span>

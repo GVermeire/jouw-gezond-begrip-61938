@@ -14,31 +14,23 @@ const Landing = () => {
         <div className="container relative mx-auto px-4 py-20 sm:py-32">
           <div className="mx-auto max-w-3xl text-center">
             <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm text-white backdrop-blur-sm">
-              <Heart className="h-4 w-4" />
-              <span>Uw gezondheid, begrijpelijk gemaakt</span>
+              <Mic className="h-4 w-4" />
+              <span>AI-gestuurde medische transcriptie</span>
             </div>
             <h1 className="mb-6 text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
-              Mijn Gezond Verstand
+              Auralis
             </h1>
             <p className="mb-10 text-xl text-white/90 sm:text-2xl">
-              Het platform dat medische informatie vertaalt naar begrijpelijke taal. 
-              Voor patiënten die hun gezondheid willen begrijpen en dokters die tijd willen besparen.
+              Intelligente transcriptie voor medische consultaties. 
+              Automatische SOEP-notities die u direct kunt kopiëren naar uw EPD.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
               <Button 
                 size="lg" 
                 className="bg-white text-primary hover:bg-white/90"
-                onClick={() => navigate('/login?role=patient')}
+                onClick={() => navigate('/doctor-login')}
               >
-                Inloggen voor patiënten
-              </Button>
-              <Button 
-                size="lg" 
-                variant="ghost" 
-                className="border-white bg-transparent text-white hover:bg-white/10"
-                onClick={() => navigate('/login?role=doctor')}
-              >
-                Inloggen voor dokters
+                Inloggen voor artsen
               </Button>
             </div>
           </div>
@@ -49,9 +41,9 @@ const Landing = () => {
       <section className="py-20 sm:py-32">
         <div className="container mx-auto px-4">
           <div className="mb-16 text-center">
-            <h2 className="mb-4 text-foreground">Waarom Mijn Gezond Verstand?</h2>
+            <h2 className="mb-4 text-foreground">Waarom Auralis?</h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-              We maken gezondheid toegankelijk en begrijpelijk voor iedereen
+              Bespaar tijd met AI-gestuurde transcriptie en SOEP-notities
             </p>
           </div>
 
@@ -83,11 +75,11 @@ const Landing = () => {
             <Card className="border-border/50 shadow-md transition-all hover:shadow-lg">
               <CardHeader>
                 <div className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <Users className="h-6 w-6 text-primary" />
+                  <FileText className="h-6 w-6 text-primary" />
                 </div>
-                <CardTitle>Voor Patiënten</CardTitle>
+                <CardTitle>SOEP Notaties</CardTitle>
                 <CardDescription>
-                  Bekijk uw medisch dossier, consultaties en rapporten op één centrale plek
+                  Automatisch gegenereerde SOEP-structuur klaar voor uw EPD-systeem
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -138,57 +130,28 @@ const Landing = () => {
             <h2 className="mb-4 text-foreground">Hoe werkt het?</h2>
           </div>
 
-          <div className="mx-auto grid max-w-5xl gap-12 lg:grid-cols-2">
-            <div>
-              <h3 className="mb-6 text-primary">Voor Patiënten</h3>
-              <div className="space-y-6">
-                <div className="flex gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-white">1</div>
-                  <div>
-                    <h4 className="mb-1 font-semibold">Veilig Inloggen</h4>
-                    <p className="text-muted-foreground">Log in met uw eID, itsme of bankgegevens</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-white">2</div>
-                  <div>
-                    <h4 className="mb-1 font-semibold">Geef Toestemming</h4>
-                    <p className="text-muted-foreground">Geef eenmalig toestemming om uw data op te halen</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-white">3</div>
-                  <div>
-                    <h4 className="mb-1 font-semibold">Begrijp Uw Gezondheid</h4>
-                    <p className="text-muted-foreground">Bekijk uw medische info in begrijpelijke taal</p>
-                  </div>
+          <div className="mx-auto max-w-3xl">
+            <h3 className="mb-6 text-center text-primary text-2xl">Zo werkt het</h3>
+            <div className="space-y-6">
+              <div className="flex gap-4">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-white">1</div>
+                <div>
+                  <h4 className="mb-1 font-semibold">Log in</h4>
+                  <p className="text-muted-foreground">Meld u aan op het artsenportaal</p>
                 </div>
               </div>
-            </div>
-
-            <div>
-              <h3 className="mb-6 text-secondary">Voor Dokters</h3>
-              <div className="space-y-6">
-                <div className="flex gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary text-white">1</div>
-                  <div>
-                    <h4 className="mb-1 font-semibold">Kaartlezer Koppelen</h4>
-                    <p className="text-muted-foreground">Scan de patiëntenkaart voor directe toegang</p>
-                  </div>
+              <div className="flex gap-4">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-white">2</div>
+                <div>
+                  <h4 className="mb-1 font-semibold">Start opname</h4>
+                  <p className="text-muted-foreground">Begin met het opnemen van uw consultatie</p>
                 </div>
-                <div className="flex gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary text-white">2</div>
-                  <div>
-                    <h4 className="mb-1 font-semibold">Start Consultatie</h4>
-                    <p className="text-muted-foreground">Uw gesprek wordt automatisch getranscribeerd</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary text-white">3</div>
-                  <div>
-                    <h4 className="mb-1 font-semibold">Automatische Notities</h4>
-                    <p className="text-muted-foreground">Notities worden gegenereerd in uw stijl</p>
-                  </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-white">3</div>
+                <div>
+                  <h4 className="mb-1 font-semibold">Ontvang SOEP notities</h4>
+                  <p className="text-muted-foreground">Kopieer de automatisch gegenereerde SOEP-notities naar uw EPD</p>
                 </div>
               </div>
             </div>
@@ -202,25 +165,15 @@ const Landing = () => {
           <div className="mx-auto max-w-3xl rounded-2xl bg-gradient-to-br from-primary to-primary-dark p-12 text-center shadow-lg">
             <h2 className="mb-4 text-white">Klaar om te beginnen?</h2>
             <p className="mb-8 text-lg text-white/90">
-              Maak vandaag nog een account aan en ontdek hoe eenvoudig gezondheid kan zijn
+              Start vandaag en ervaar de kracht van AI-transcriptie
             </p>
-            <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-              <Button 
-                size="lg" 
-                className="bg-white text-primary hover:bg-white/90"
-                onClick={() => navigate('/login?role=patient')}
-              >
-                Inloggen voor patiënten
-              </Button>
-              <Button 
-                size="lg" 
-                variant="ghost" 
-                className="border-white bg-transparent text-white hover:bg-white/10"
-                onClick={() => navigate('/login?role=doctor')}
-              >
-                Inloggen voor dokters
-              </Button>
-            </div>
+            <Button 
+              size="lg" 
+              className="bg-white text-primary hover:bg-white/90"
+              onClick={() => navigate('/doctor-login')}
+            >
+              Inloggen voor artsen
+            </Button>
           </div>
         </div>
       </section>
@@ -230,11 +183,11 @@ const Landing = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             <div className="flex items-center gap-2">
-              <Heart className="h-5 w-5 text-primary" />
-              <span className="font-semibold">Mijn Gezond Verstand</span>
+              <Mic className="h-5 w-5 text-primary" />
+              <span className="font-semibold">Auralis</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              © 2025 - Uw gezondheid, ons verstand
+              © 2025 - Intelligente medische transcriptie
             </p>
           </div>
         </div>
