@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heart, Shield, Users, Clock, FileText, Mic } from "lucide-react";
+import { Mic, FileText, Code, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Landing = () => {
@@ -37,127 +37,78 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* How Auralis Works - 4 Steps */}
       <section className="py-20 sm:py-32">
         <div className="container mx-auto px-4">
           <div className="mb-16 text-center">
-            <h2 className="mb-4 text-foreground">Waarom Auralis?</h2>
+            <h2 className="mb-4 text-foreground">Hoe Auralis werkt</h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-              Bespaar tijd met AI-gestuurde transcriptie en SOEP-notities
+              Vier eenvoudige stappen van consultatie naar EPD-klaar verslag
             </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <Card className="border-border/50 shadow-md transition-all hover:shadow-lg">
-              <CardHeader>
-                <div className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <FileText className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle>Begrijpelijke Samenvattingen</CardTitle>
-                <CardDescription>
-                  Medische rapporten vertaald naar heldere, menselijke taal die iedereen begrijpt
-                </CardDescription>
-              </CardHeader>
-            </Card>
+          <div className="mx-auto max-w-5xl">
+            <div className="grid gap-8 md:grid-cols-2">
+              <Card className="border-border/50 shadow-lg transition-all hover:shadow-xl">
+                <CardHeader>
+                  <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary-dark">
+                    <Mic className="h-8 w-8 text-white" />
+                  </div>
+                  <CardTitle className="text-xl">1. Auralis luistert en noteert</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Auralis luistert mee tijdens de consultatie en vat het gesprek automatisch samen met behulp van AI. Uw eigen stijl en structuur blijven behouden — u hoeft niets meer zelf te noteren.
+                  </p>
+                </CardContent>
+              </Card>
 
-            <Card className="border-border/50 shadow-md transition-all hover:shadow-lg">
-              <CardHeader>
-                <div className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-secondary/10">
-                  <Shield className="h-6 w-6 text-secondary" />
-                </div>
-                <CardTitle>Veilig & Privé</CardTitle>
-                <CardDescription>
-                  Uw gezondheidsdata is beschermd volgens de strengste Belgische en Europese normen
-                </CardDescription>
-              </CardHeader>
-            </Card>
+              <Card className="border-border/50 shadow-lg transition-all hover:shadow-xl">
+                <CardHeader>
+                  <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-secondary to-secondary/80">
+                    <FileText className="h-8 w-8 text-white" />
+                  </div>
+                  <CardTitle className="text-xl">2. Auralis schrijft</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Auralis genereert volledige consultatieverslagen, hospitalisatieverslagen, verwijsbrieven en attesten op basis van een korte dictee of opname.
+                  </p>
+                </CardContent>
+              </Card>
 
-            <Card className="border-border/50 shadow-md transition-all hover:shadow-lg">
-              <CardHeader>
-                <div className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <FileText className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle>SOEP Notaties</CardTitle>
-                <CardDescription>
-                  Automatisch gegenereerde SOEP-structuur klaar voor uw EPD-systeem
-                </CardDescription>
-              </CardHeader>
-            </Card>
+              <Card className="border-border/50 shadow-lg transition-all hover:shadow-xl">
+                <CardHeader>
+                  <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary-dark">
+                    <Code className="h-8 w-8 text-white" />
+                  </div>
+                  <CardTitle className="text-xl">3. Auralis codeert</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Auralis analyseert het verslag en haalt automatisch relevante SNOMED-CT-codes of medische trefwoorden uit de tekst.
+                  </p>
+                </CardContent>
+              </Card>
 
-            <Card className="border-border/50 shadow-md transition-all hover:shadow-lg">
-              <CardHeader>
-                <div className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-secondary/10">
-                  <Mic className="h-6 w-6 text-secondary" />
-                </div>
-                <CardTitle>Voor Dokters</CardTitle>
-                <CardDescription>
-                  Automatische transcriptie van consultaties bespaart u tijd en administratie
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-border/50 shadow-md transition-all hover:shadow-lg">
-              <CardHeader>
-                <div className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <Clock className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle>Tijdsbesparing</CardTitle>
-                <CardDescription>
-                  Minder administratie betekent meer tijd voor wat echt telt: de zorg
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-border/50 shadow-md transition-all hover:shadow-lg">
-              <CardHeader>
-                <div className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-secondary/10">
-                  <Heart className="h-6 w-6 text-secondary" />
-                </div>
-                <CardTitle>Altijd Toegankelijk</CardTitle>
-                <CardDescription>
-                  Uw gezondheidsdata altijd binnen handbereik, wanneer u het nodig heeft
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* How it Works */}
-      <section className="bg-muted/30 py-20 sm:py-32">
-        <div className="container mx-auto px-4">
-          <div className="mb-16 text-center">
-            <h2 className="mb-4 text-foreground">Hoe werkt het?</h2>
-          </div>
-
-          <div className="mx-auto max-w-3xl">
-            <h3 className="mb-6 text-center text-primary text-2xl">Zo werkt het</h3>
-            <div className="space-y-6">
-              <div className="flex gap-4">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-white">1</div>
-                <div>
-                  <h4 className="mb-1 font-semibold">Log in</h4>
-                  <p className="text-muted-foreground">Meld u aan op het artsenportaal</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-white">2</div>
-                <div>
-                  <h4 className="mb-1 font-semibold">Start opname</h4>
-                  <p className="text-muted-foreground">Begin met het opnemen van uw consultatie</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-white">3</div>
-                <div>
-                  <h4 className="mb-1 font-semibold">Ontvang SOEP notities</h4>
-                  <p className="text-muted-foreground">Kopieer de automatisch gegenereerde SOEP-notities naar uw EPD</p>
-                </div>
-              </div>
+              <Card className="border-border/50 shadow-lg transition-all hover:shadow-xl">
+                <CardHeader>
+                  <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-secondary to-secondary/80">
+                    <RefreshCw className="h-8 w-8 text-white" />
+                  </div>
+                  <CardTitle className="text-xl">4. Auralis herstructureert</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Auralis zet elk verslag automatisch om in een duidelijke SOEP-structuur, klaar om te kopiëren naar het EPD-systeem.
+                  </p>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
       </section>
+
 
       {/* CTA Section */}
       <section className="py-20 sm:py-32">
