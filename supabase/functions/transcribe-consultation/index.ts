@@ -96,10 +96,10 @@ serve(async (req) => {
     const { text: rawTranscript } = await transcriptionResponse.json();
     console.log('Transcription complete, generating SOEP summary');
 
-    // Generate SOEP format summary
+    // Generate SOEP format summary with SNOMED codes
     const soepSummary = await generateSoepSummary(rawTranscript, OPENAI_API_KEY);
 
-    console.log('SOEP summary generated, updating database');
+    console.log('SOEP summary with SNOMED codes generated, updating database');
 
     // Update consultation record with SOEP summary
     const { error: updateError } = await supabase
@@ -144,7 +144,7 @@ serve(async (req) => {
 async function generateSoepSummary(transcript: string, apiKey: string): Promise<string> {
   const prompt = `Maak een gestructureerde samenvatting van dit consultatie gesprek in SOEP-formaat (Subjectief, Objectief, Evaluatie, Plan).
 
-Gebruik deze structuur:
+Gebruik deze structuur en voeg relevante SNOMED-CT codes toe:
 
 S (Subjectief):
 - Klachten en symptomen zoals de patiënt ze beschrijft
@@ -158,12 +158,20 @@ O (Objectief):
 E (Evaluatie):
 - Diagnose of differentiaaldiagnose
 - Interpretatie van bevindingen
+- SNOMED-CT codes voor diagnoses
 
 P (Plan):
 - Behandeling
-- Medicatie
+- Medicatie (met SNOMED-CT codes indien van toepassing)
 - Follow-up afspraken
 - Adviezen
+
+SNOMED-CT Codes:
+Lijst hier alle relevante SNOMED-CT codes op voor:
+- Diagnoses
+- Procedures
+- Bevindingen
+- Medicatie
 
 Transcript:
 ${transcript}`;
@@ -177,7 +185,7 @@ ${transcript}`;
     body: JSON.stringify({
       model: 'gpt-4o-mini',
       messages: [
-        { role: 'system', content: 'Je bent een medische assistent die helpt met het structureren van consultaties volgens het SOEP-formaat in het Nederlands.' },
+        { role: 'system', content: 'Je bent een medische assistent die helpt met het structureren van consultaties volgens het SOEP-formaat in het Nederlands. Je voegt ook relevante SNOMED-CT codes toe voor diagnoses, procedures en medicatie.' },
         { role: 'user', content: prompt }
       ],
       temperature: 0.3,

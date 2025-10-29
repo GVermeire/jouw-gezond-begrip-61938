@@ -317,7 +317,7 @@ const DoctorDashboard = () => {
                           "h-24 w-24 rounded-full",
                           isRecording 
                             ? "bg-destructive hover:bg-destructive/90 animate-pulse" 
-                            : "bg-secondary hover:bg-secondary/90"
+                            : "bg-primary hover:bg-primary/90"
                         )}
                         onClick={handleStartConsultation}
                         disabled={isProcessing}

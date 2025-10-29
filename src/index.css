@@ -23,10 +23,10 @@ All colors MUST be HSL.
     --primary-light: 355 85% 95%;
     --primary-dark: 355 85% 50%;
 
-    /* Complementary purple accent */
-    --secondary: 280 60% 60%;
+    /* Complementary pink accent */
+    --secondary: 340 85% 70%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-light: 280 60% 95%;
+    --secondary-light: 340 85% 95%;
 
     --muted: 340 20% 96%;
     --muted-foreground: 340 10% 50%;
@@ -72,9 +72,9 @@ All colors MUST be HSL.
     --primary-light: 355 85% 25%;
     --primary-dark: 355 85% 80%;
 
-    --secondary: 280 60% 65%;
+    --secondary: 340 85% 75%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-light: 280 60% 20%;
+    --secondary-light: 340 85% 25%;
 
     --muted: 340 15% 20%;
     --muted-foreground: 340 10% 70%;
