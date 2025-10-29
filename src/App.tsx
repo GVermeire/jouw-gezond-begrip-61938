@@ -7,8 +7,6 @@ import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
 import Onboarding from "./pages/Onboarding";
-import PatientLogin from "./pages/patient/PatientLogin";
-import PatientDashboard from "./pages/patient/PatientDashboard";
 import DoctorLogin from "./pages/doctor/DoctorLogin";
 import DoctorDashboard from "./pages/doctor/DoctorDashboard";
 import NotFound from "./pages/NotFound";
@@ -28,8 +26,6 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Registration />} />
             <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/patient-login" element={<PatientLogin />} />
-            <Route path="/patient-dashboard" element={<PatientDashboard />} />
             <Route path="/doctor-login" element={<DoctorLogin />} />
             <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

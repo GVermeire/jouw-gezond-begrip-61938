@@ -94,27 +94,21 @@ serve(async (req) => {
     }
 
     const { text: rawTranscript } = await transcriptionResponse.json();
-    console.log('Transcription complete, generating summaries');
+    console.log('Transcription complete, generating SOEP summary');
 
-    // Generate three different summary styles using GPT
-    const summaryPromises = [
-      generateSummary(rawTranscript, 'simple', OPENAI_API_KEY),
-      generateSummary(rawTranscript, 'detailed', OPENAI_API_KEY),
-      generateSummary(rawTranscript, 'technical', OPENAI_API_KEY)
-    ];
+    // Generate SOEP format summary
+    const soepSummary = await generateSoepSummary(rawTranscript, OPENAI_API_KEY);
 
-    const [summarySimple, summaryDetailed, summaryTechnical] = await Promise.all(summaryPromises);
+    console.log('SOEP summary generated, updating database');
 
-    console.log('Summaries generated, updating database');
-
-    // Update consultation record
+    // Update consultation record with SOEP summary
     const { error: updateError } = await supabase
       .from('consultations')
       .update({
         transcript: rawTranscript,
-        summary_simple: summarySimple,
-        summary_detailed: summaryDetailed,
-        summary_technical: summaryTechnical,
+        summary_simple: soepSummary,
+        summary_detailed: null,
+        summary_technical: null,
       })
       .eq('id', consultationId);
 
@@ -129,11 +123,7 @@ serve(async (req) => {
       JSON.stringify({ 
         success: true,
         transcript: rawTranscript,
-        summaries: {
-          simple: summarySimple,
-          detailed: summaryDetailed,
-          technical: summaryTechnical
-        }
+        soep_summary: soepSummary
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
@@ -151,12 +141,32 @@ serve(async (req) => {
   }
 });
 
-async function generateSummary(transcript: string, style: string, apiKey: string): Promise<string> {
-  const prompts = {
-    simple: `Maak een eenvoudige, begrijpelijke samenvatting van dit medisch consult in het Nederlands. Gebruik dagelijks taal zonder medisch jargon. Maximum 3 alinea's:\n\n${transcript}`,
-    detailed: `Maak een gedetailleerde samenvatting van dit medisch consult in het Nederlands. Vermeld alle besproken klachten, onderzoeken, diagnoses en behandelplannen. Gebruik professionele maar begrijpelijke taal:\n\n${transcript}`,
-    technical: `Maak een technische medische samenvatting van dit consult in het Nederlands. Gebruik correcte medische terminologie, SOEP-structuur (Subjectief, Objectief, Evaluatie, Plan) en vermeld alle relevante medische details:\n\n${transcript}`
-  };
+async function generateSoepSummary(transcript: string, apiKey: string): Promise<string> {
+  const prompt = `Maak een gestructureerde samenvatting van dit consultatie gesprek in SOEP-formaat (Subjectief, Objectief, Evaluatie, Plan).
+
+Gebruik deze structuur:
+
+S (Subjectief):
+- Klachten en symptomen zoals de patiënt ze beschrijft
+- Anamnese
+
+O (Objectief):
+- Lichamelijk onderzoek
+- Metingen (bloeddruk, temperatuur, etc.)
+- Observaties
+
+E (Evaluatie):
+- Diagnose of differentiaaldiagnose
+- Interpretatie van bevindingen
+
+P (Plan):
+- Behandeling
+- Medicatie
+- Follow-up afspraken
+- Adviezen
+
+Transcript:
+${transcript}`;
 
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -167,8 +177,8 @@ async function generateSummary(transcript: string, style: string, apiKey: string
     body: JSON.stringify({
       model: 'gpt-4o-mini',
       messages: [
-        { role: 'system', content: 'Je bent een medische assistent die consulten samenvat in het Nederlands.' },
-        { role: 'user', content: prompts[style as keyof typeof prompts] }
+        { role: 'system', content: 'Je bent een medische assistent die helpt met het structureren van consultaties volgens het SOEP-formaat in het Nederlands.' },
+        { role: 'user', content: prompt }
       ],
       temperature: 0.3,
     }),

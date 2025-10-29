@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Heart, Settings, LogOut, Mic, MicOff, Search, Calendar, Upload } from "lucide-react";
+import { Heart, Settings, LogOut, Mic, MicOff, Search, Calendar, Upload, Copy, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
@@ -22,6 +22,7 @@ const DoctorDashboard = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [publishToPatient, setPublishToPatient] = useState(false);
   const [transcriptResult, setTranscriptResult] = useState<any>(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -356,28 +357,38 @@ const DoctorDashboard = () => {
 
                       {transcriptResult && (
                         <div className="mt-6 space-y-4 rounded-lg border border-border bg-muted/30 p-4">
-                          <h4 className="font-semibold text-sm">Transcriptie resultaat</h4>
+                          <div className="flex items-center justify-between">
+                            <h4 className="font-semibold text-sm">SOEP Samenvatting</h4>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                navigator.clipboard.writeText(transcriptResult.summary_simple || '');
+                                setCopied(true);
+                                setTimeout(() => setCopied(false), 2000);
+                                toast({
+                                  title: "Gekopieerd!",
+                                  description: "SOEP samenvatting gekopieerd naar klembord",
+                                });
+                              }}
+                              className="gap-2"
+                            >
+                              {copied ? (
+                                <>
+                                  <Check className="h-4 w-4" />
+                                  Gekopieerd
+                                </>
+                              ) : (
+                                <>
+                                  <Copy className="h-4 w-4" />
+                                  Kopieer naar klembord
+                                </>
+                              )}
+                            </Button>
+                          </div>
                           
-                          <div className="space-y-3">
-                            <div>
-                              <p className="text-xs text-muted-foreground mb-1">Volledige transcriptie:</p>
-                              <p className="text-sm">{transcriptResult.transcript}</p>
-                            </div>
-                            
-                            <div>
-                              <p className="text-xs text-muted-foreground mb-1">Eenvoudige samenvatting:</p>
-                              <p className="text-sm">{transcriptResult.summary_simple}</p>
-                            </div>
-                            
-                            <div>
-                              <p className="text-xs text-muted-foreground mb-1">Gedetailleerde samenvatting:</p>
-                              <p className="text-sm">{transcriptResult.summary_detailed}</p>
-                            </div>
-                            
-                            <div>
-                              <p className="text-xs text-muted-foreground mb-1">Technische samenvatting:</p>
-                              <p className="text-sm">{transcriptResult.summary_technical}</p>
-                            </div>
+                          <div className="rounded-md bg-card p-4">
+                            <pre className="text-sm whitespace-pre-wrap font-sans">{transcriptResult.summary_simple}</pre>
                           </div>
 
                           <Button
