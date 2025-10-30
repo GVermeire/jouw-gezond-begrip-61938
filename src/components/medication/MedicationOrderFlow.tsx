@@ -122,7 +122,7 @@ const MedicationOrderFlow = ({ medications, onClose }: MedicationOrderFlowProps)
       onClose();
     } catch (error: any) {
       toast({
-        title: 'Fout',
+        title: 'Error',
         description: error.message,
         variant: 'destructive',
       });
@@ -144,7 +144,7 @@ const MedicationOrderFlow = ({ medications, onClose }: MedicationOrderFlowProps)
           <div className="space-y-4">
             <h3 className="font-semibold">{t('medication.selectItems', language)}</h3>
             {medications.length === 0 ? (
-              <p className="text-muted-foreground">Geen medicatie beschikbaar om te bestellen.</p>
+              <p className="text-muted-foreground">No medication available to order.</p>
             ) : (
               <div className="space-y-3">
                 {medications.map((med) => (
@@ -271,11 +271,11 @@ const MedicationOrderFlow = ({ medications, onClose }: MedicationOrderFlowProps)
           {step > 1 ? (
             <Button variant="outline" onClick={() => setStep(step - 1)}>
               <ChevronLeft className="h-4 w-4 mr-1" />
-              Terug
+              Back
             </Button>
           ) : (
             <Button variant="outline" onClick={onClose}>
-              Annuleren
+              Cancel
             </Button>
           )}
           
@@ -284,7 +284,7 @@ const MedicationOrderFlow = ({ medications, onClose }: MedicationOrderFlowProps)
               onClick={() => setStep(step + 1)}
               disabled={step === 1 && selectedMeds.size === 0}
             >
-              Volgende
+              Next
               <ChevronRight className="h-4 w-4 ml-1" />
             </Button>
           ) : (

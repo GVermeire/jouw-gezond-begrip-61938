@@ -15,14 +15,14 @@ const Landing = () => {
           <div className="mx-auto max-w-3xl text-center">
             <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm text-white backdrop-blur-sm">
               <Mic className="h-4 w-4" />
-              <span>AI-gestuurde medische transcriptie</span>
+              <span>AI-powered medical transcription</span>
             </div>
             <h1 className="mb-6 text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
               Auralis
             </h1>
             <p className="mb-10 text-xl text-white/90 sm:text-2xl">
-              Intelligente transcriptie voor medische consultaties. 
-              Automatische SOEP-notities die u direct kunt kopiëren naar uw EPD.
+              Intelligent transcription for medical consultations. 
+              Automatic SOAP notes you can directly copy to your EHR.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
               <Button 
@@ -30,7 +30,7 @@ const Landing = () => {
                 className="bg-white text-primary hover:bg-white/90"
                 onClick={() => navigate('/doctor-login')}
               >
-                Inloggen voor artsen
+                Doctor Login
               </Button>
             </div>
           </div>
@@ -41,9 +41,9 @@ const Landing = () => {
       <section className="py-20 sm:py-32">
         <div className="container mx-auto px-4">
           <div className="mb-16 text-center">
-            <h2 className="mb-4 text-foreground">Hoe Auralis werkt</h2>
+            <h2 className="mb-4 text-foreground">How Auralis Works</h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-              Vier eenvoudige stappen van consultatie naar EPD-klaar verslag
+              Four simple steps from consultation to EHR-ready report
             </p>
           </div>
 
@@ -54,11 +54,11 @@ const Landing = () => {
                   <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary-dark">
                     <Mic className="h-8 w-8 text-white" />
                   </div>
-                  <CardTitle className="text-xl">1. Auralis luistert en noteert</CardTitle>
+                  <CardTitle className="text-xl">1. Auralis Listens and Notes</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground leading-relaxed">
-                    Auralis luistert mee tijdens de consultatie en vat het gesprek automatisch samen met behulp van AI. Uw eigen stijl en structuur blijven behouden — u hoeft niets meer zelf te noteren.
+                    Auralis listens during the consultation and automatically summarizes the conversation using AI. Your own style and structure are preserved — you don't need to take notes anymore.
                   </p>
                 </CardContent>
               </Card>
@@ -68,11 +68,11 @@ const Landing = () => {
                   <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-secondary to-secondary/80">
                     <FileText className="h-8 w-8 text-white" />
                   </div>
-                  <CardTitle className="text-xl">2. Auralis schrijft</CardTitle>
+                  <CardTitle className="text-xl">2. Auralis Writes</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground leading-relaxed">
-                    Auralis genereert volledige consultatieverslagen, hospitalisatieverslagen, verwijsbrieven en attesten op basis van een korte dictee of opname.
+                    Auralis generates complete consultation reports, hospitalization reports, referral letters and certificates based on a short dictation or recording.
                   </p>
                 </CardContent>
               </Card>
@@ -82,11 +82,11 @@ const Landing = () => {
                   <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary-dark">
                     <Code className="h-8 w-8 text-white" />
                   </div>
-                  <CardTitle className="text-xl">3. Auralis codeert</CardTitle>
+                  <CardTitle className="text-xl">3. Auralis Codes</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground leading-relaxed">
-                    Auralis analyseert het verslag en haalt automatisch relevante SNOMED-CT-codes of medische trefwoorden uit de tekst.
+                    Auralis analyzes the report and automatically extracts relevant SNOMED-CT codes or medical keywords from the text.
                   </p>
                 </CardContent>
               </Card>
@@ -96,11 +96,11 @@ const Landing = () => {
                   <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-secondary to-secondary/80">
                     <RefreshCw className="h-8 w-8 text-white" />
                   </div>
-                  <CardTitle className="text-xl">4. Auralis herstructureert</CardTitle>
+                  <CardTitle className="text-xl">4. Auralis Restructures</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground leading-relaxed">
-                    Auralis zet elk verslag automatisch om in een duidelijke SOEP-structuur, klaar om te kopiëren naar het EPD-systeem.
+                    Auralis automatically converts each report into a clear SOAP structure, ready to copy to the EHR system.
                   </p>
                 </CardContent>
               </Card>
@@ -114,16 +114,16 @@ const Landing = () => {
       <section className="py-20 sm:py-32">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl rounded-2xl bg-gradient-to-br from-primary to-primary-dark p-12 text-center shadow-lg">
-            <h2 className="mb-4 text-white">Klaar om te beginnen?</h2>
+            <h2 className="mb-4 text-white">Ready to Get Started?</h2>
             <p className="mb-8 text-lg text-white/90">
-              Start vandaag en ervaar de kracht van AI-transcriptie
+              Start today and experience the power of AI transcription
             </p>
             <Button 
               size="lg" 
               className="bg-white text-primary hover:bg-white/90"
               onClick={() => navigate('/doctor-login')}
             >
-              Inloggen voor artsen
+              Doctor Login
             </Button>
           </div>
         </div>
@@ -138,7 +138,7 @@ const Landing = () => {
               <span className="font-semibold">Auralis</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              © 2025 - Intelligente medische transcriptie
+              © 2025 - Intelligent medical transcription
             </p>
           </div>
         </div>

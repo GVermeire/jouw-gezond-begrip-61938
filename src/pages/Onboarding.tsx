@@ -38,14 +38,14 @@ const Onboarding = () => {
       if (error) throw error;
       
       toast({
-        title: 'Voorkeuren opgeslagen',
-        description: 'U wordt doorgestuurd naar uw dashboard',
+        title: 'Preferences Saved',
+        description: 'You will be redirected to your dashboard',
       });
       
       navigate('/patient-dashboard');
     } catch (error: any) {
       toast({
-        title: 'Fout',
+        title: 'Error',
         description: error.message,
         variant: 'destructive',
       });
@@ -60,16 +60,16 @@ const Onboarding = () => {
         <CardHeader>
           <div className="flex items-center justify-center gap-2 mb-4">
             <Heart className="h-8 w-8 text-primary" />
-            <CardTitle className="text-2xl">Welkom bij Mijn Gezond Verstand</CardTitle>
+            <CardTitle className="text-2xl">Welcome to My Healthy Mind</CardTitle>
           </div>
           <CardDescription>
-            Laten we uw voorkeuren instellen voor een persoonlijke ervaring
+            Let's set up your preferences for a personalized experience
           </CardDescription>
         </CardHeader>
         
         <CardContent className="space-y-6">
           <div className="space-y-3">
-            <Label className="text-base font-semibold">Voorkeurstaal</Label>
+            <Label className="text-base font-semibold">Preferred Language</Label>
             <RadioGroup value={language} onValueChange={(v) => setLanguage(v as Language)}>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="nl" id="nl" />
@@ -87,46 +87,46 @@ const Onboarding = () => {
           </div>
           
           <div className="space-y-3">
-            <Label className="text-base font-semibold">Weergavestijl</Label>
+            <Label className="text-base font-semibold">Display Style</Label>
             <p className="text-sm text-muted-foreground">
-              Hoe wilt u uw medische informatie gepresenteerd krijgen?
+              How would you like your medical information presented?
             </p>
             
             <RadioGroup value={viewStyle} onValueChange={(v) => setViewStyle(v as any)}>
               <div className="space-y-1">
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="simple" id="simple" />
-                  <Label htmlFor="simple" className="cursor-pointer font-medium">Eenvoudig</Label>
+                  <Label htmlFor="simple" className="cursor-pointer font-medium">Simple</Label>
                 </div>
                 <p className="ml-6 text-sm text-muted-foreground">
-                  Begrijpelijke uitleg zonder medische jargon
+                  Clear explanations without medical jargon
                 </p>
               </div>
               
               <div className="space-y-1">
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="detailed" id="detailed" />
-                  <Label htmlFor="detailed" className="cursor-pointer font-medium">Gedetailleerd</Label>
+                  <Label htmlFor="detailed" className="cursor-pointer font-medium">Detailed</Label>
                 </div>
                 <p className="ml-6 text-sm text-muted-foreground">
-                  Meer context en details over uw gezondheid
+                  More context and details about your health
                 </p>
               </div>
               
               <div className="space-y-1">
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="technical" id="technical" />
-                  <Label htmlFor="technical" className="cursor-pointer font-medium">Technisch</Label>
+                  <Label htmlFor="technical" className="cursor-pointer font-medium">Technical</Label>
                 </div>
-                <p className="ml-6 text-sm text-muted-foreground">
-                  Volledige medische terminologie en details
+                <p className="ml-6 text-sm text-uted-foreground">
+                  Full medical terminology and details
                 </p>
               </div>
             </RadioGroup>
           </div>
           
           <Button onClick={handleComplete} className="w-full" disabled={loading}>
-            {loading ? 'Opslaan...' : 'Doorgaan naar Dashboard'}
+            {loading ? 'Saving...' : 'Continue to Dashboard'}
           </Button>
         </CardContent>
       </Card>
