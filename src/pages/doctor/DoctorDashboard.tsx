@@ -70,29 +70,29 @@ const DoctorDashboard = () => {
       id: 0,
       name: "Jan Peeters",
       time: "09:00",
-      notes: "Routine controle, bloeddruk meting...",
-      date: "Vandaag",
+      notes: "Routine checkup, blood pressure measurement...",
+      date: "Today",
     },
     {
       id: 1,
       name: "Marie Dubois",
       time: "09:30",
-      notes: "Griepsymptomen, koorts sinds gisteren...",
-      date: "Vandaag",
+      notes: "Flu symptoms, fever since yesterday...",
+      date: "Today",
     },
     {
       id: 2,
       name: "Peter Janssens",
       time: "10:00",
       notes: "Follow-up diabetes type 2...",
-      date: "Vandaag",
+      date: "Today",
     },
     {
       id: 3,
       name: "Sophie Vermeulen",
       time: "14:00",
-      notes: "Nieuwe patient, intake gesprek...",
-      date: "Gisteren",
+      notes: "New patient, intake interview...",
+      date: "Yesterday",
     },
   ];
 
@@ -122,14 +122,14 @@ const DoctorDashboard = () => {
         setCurrentConsultation(consultation);
         
         toast({
-          title: "Opname gestart",
-          description: "De consultatie wordt opgenomen",
+          title: "Recording Started",
+          description: "The consultation is being recorded",
         });
       } catch (error) {
         console.error('Error starting consultation:', error);
         toast({
-          title: "Fout",
-          description: "Kon opname niet starten",
+          title: "Error",
+          description: "Could not start recording",
           variant: "destructive",
         });
       }
@@ -139,8 +139,8 @@ const DoctorDashboard = () => {
   const handleUploadAndTranscribe = async () => {
     if (!audioBlob || !currentConsultation) {
       toast({
-        title: "Geen audio",
-        description: "Er is geen audio om te uploaden",
+        title: "No Audio",
+        description: "There is no audio to upload",
         variant: "destructive",
       });
       return;
@@ -169,8 +169,8 @@ const DoctorDashboard = () => {
       if (updateError) throw updateError;
 
       toast({
-        title: "Audio geüpload",
-        description: "Audio wordt getranscribeerd...",
+        title: "Audio Uploaded",
+        description: "Audio is being transcribed...",
       });
 
       // Call edge function to transcribe
@@ -184,10 +184,10 @@ const DoctorDashboard = () => {
       if (transcribeError) throw transcribeError;
 
       toast({
-        title: "Klaar!",
+        title: "Done!",
         description: publishToPatient 
-          ? "Consultatie getranscribeerd en gepubliceerd naar patiënt" 
-          : "Consultatie getranscribeerd",
+          ? "Consultation transcribed and published to patient" 
+          : "Consultation transcribed",
       });
 
       // Fetch the updated consultation with transcripts
@@ -209,8 +209,8 @@ const DoctorDashboard = () => {
     } catch (error) {
       console.error('Error processing consultation:', error);
       toast({
-        title: "Fout",
-        description: "Er is een fout opgetreden bij het verwerken",
+        title: "Error",
+        description: "An error occurred during processing",
         variant: "destructive",
       });
     } finally {
@@ -264,13 +264,13 @@ const DoctorDashboard = () => {
             <div className="relative mb-4">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Zoek patiënt..."
+                placeholder="Search patient..."
                 className="pl-9"
               />
             </div>
             <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
               <Calendar className="h-4 w-4" />
-              <span>Vandaag - 15 maart 2024</span>
+              <span>Today - March 15, 2024</span>
             </div>
           </div>
 
@@ -302,7 +302,7 @@ const DoctorDashboard = () => {
               <div className="border-b border-border bg-card p-6">
                 <h2 className="text-2xl font-semibold">{currentPatient.name}</h2>
                 <p className="text-sm text-muted-foreground">
-                  Consultatie om {currentPatient.time}
+                  Consultation at {currentPatient.time}
                 </p>
               </div>
 
@@ -329,7 +329,7 @@ const DoctorDashboard = () => {
                         )}
                       </Button>
                       <p className="mt-4 text-sm font-semibold">
-                        {isRecording ? "Stop opname" : "Start opname"}
+                        {isRecording ? "Stop Recording" : "Start Recording"}
                       </p>
                       
                       {audioBlob && !isRecording && (
@@ -341,7 +341,7 @@ const DoctorDashboard = () => {
                               onCheckedChange={setPublishToPatient}
                             />
                             <Label htmlFor="publish-mode" className="text-sm">
-                              Publiceer naar patiëntenportaal
+                              Publish to patient portal
                             </Label>
                           </div>
                           <Button
@@ -350,7 +350,7 @@ const DoctorDashboard = () => {
                             className="gap-2"
                           >
                             <Upload className="h-4 w-4" />
-                            {isProcessing ? "Verwerken..." : "Upload en transcribeer"}
+                            {isProcessing ? "Processing..." : "Upload and Transcribe"}
                           </Button>
                         </div>
                       )}
@@ -358,7 +358,7 @@ const DoctorDashboard = () => {
                       {transcriptResult && (
                         <div className="mt-6 space-y-4 rounded-lg border border-border bg-muted/30 p-4">
                           <div className="flex items-center justify-between">
-                            <h4 className="font-semibold text-sm">SOEP Samenvatting</h4>
+                            <h4 className="font-semibold text-sm">SOAP Summary</h4>
                             <Button
                               variant="outline"
                               size="sm"
@@ -367,8 +367,8 @@ const DoctorDashboard = () => {
                                 setCopied(true);
                                 setTimeout(() => setCopied(false), 2000);
                                 toast({
-                                  title: "Gekopieerd!",
-                                  description: "SOEP samenvatting gekopieerd naar klembord",
+                                  title: "Copied!",
+                                  description: "SOAP summary copied to clipboard",
                                 });
                               }}
                               className="gap-2"
@@ -376,12 +376,12 @@ const DoctorDashboard = () => {
                               {copied ? (
                                 <>
                                   <Check className="h-4 w-4" />
-                                  Gekopieerd
+                                  Copied
                                 </>
                               ) : (
                                 <>
                                   <Copy className="h-4 w-4" />
-                                  Kopieer naar klembord
+                                  Copy to Clipboard
                                 </>
                               )}
                             </Button>
@@ -397,7 +397,7 @@ const DoctorDashboard = () => {
                             onClick={() => setTranscriptResult(null)}
                             className="mt-2"
                           >
-                            Sluiten
+                            Close
                           </Button>
                         </div>
                       )}
@@ -408,13 +408,13 @@ const DoctorDashboard = () => {
                 {isRecording && (
                   <Card className="bg-muted/50">
                     <CardContent className="p-6">
-                      <h3 className="mb-4 font-semibold">Live Transcriptie</h3>
+                      <h3 className="mb-4 font-semibold">Live Transcription</h3>
                       <div className="space-y-2 text-sm">
                         <p className="text-muted-foreground">
-                          [00:15] Goedemorgen meneer Peeters, hoe gaat het met u vandaag?
+                          [00:15] Good morning Mr. Peeters, how are you feeling today?
                         </p>
                         <p className="text-muted-foreground">
-                          [00:23] Patient geeft aan zich goed te voelen, geen nieuwe klachten...
+                          [00:23] Patient reports feeling well, no new complaints...
                         </p>
                       </div>
                     </CardContent>
@@ -424,17 +424,17 @@ const DoctorDashboard = () => {
                 {!isRecording && (
                   <Card>
                     <CardContent className="p-6">
-                      <h3 className="mb-4 font-semibold">Eerdere Notities</h3>
+                      <h3 className="mb-4 font-semibold">Previous Notes</h3>
                       <div className="space-y-4 text-sm">
                         <div>
                           <div className="mb-1 flex items-center justify-between">
-                            <span className="font-medium">10 januari 2024</span>
+                            <span className="font-medium">January 10, 2024</span>
                             <span className="text-muted-foreground">09:00</span>
                           </div>
                           <p className="text-muted-foreground">
-                            Routine controle. Bloeddruk: 120/80 mmHg. Hartslag: 72 bpm. 
-                            Patient is in goede gezondheid. Geen bijzonderheden. 
-                            Follow-up over 3 maanden.
+                            Routine checkup. Blood pressure: 120/80 mmHg. Heart rate: 72 bpm. 
+                            Patient is in good health. No abnormalities. 
+                            Follow-up in 3 months.
                           </p>
                         </div>
                       </div>
@@ -445,7 +445,7 @@ const DoctorDashboard = () => {
             </>
           ) : (
             <div className="flex flex-1 items-center justify-center text-muted-foreground">
-              Selecteer een patiënt om te beginnen
+              Select a patient to begin
             </div>
           )}
         </div>
@@ -453,31 +453,31 @@ const DoctorDashboard = () => {
         {/* Right Sidebar - Patient Info */}
         {currentPatient && (
           <div className="w-80 border-l border-border bg-muted/30 p-6">
-            <h3 className="mb-4 font-semibold">Patiëntinfo</h3>
+            <h3 className="mb-4 font-semibold">Patient Info</h3>
             <Card className="mb-4">
               <CardContent className="p-4">
                 <dl className="space-y-2 text-sm">
                   <div>
-                    <dt className="text-muted-foreground">Geboortedatum</dt>
-                    <dd className="font-medium">15/04/1975</dd>
+                    <dt className="text-muted-foreground">Date of Birth</dt>
+                    <dd className="font-medium">04/15/1975</dd>
                   </div>
                   <div>
-                    <dt className="text-muted-foreground">Rijksregisternummer</dt>
+                    <dt className="text-muted-foreground">National Registry Number</dt>
                     <dd className="font-medium">75.04.15-123.45</dd>
                   </div>
                   <div>
-                    <dt className="text-muted-foreground">Ziekenfonds</dt>
+                    <dt className="text-muted-foreground">Health Insurance</dt>
                     <dd className="font-medium">CM</dd>
                   </div>
                 </dl>
               </CardContent>
             </Card>
 
-            <h4 className="mb-2 text-sm font-semibold">Recente Consultaties</h4>
+            <h4 className="mb-2 text-sm font-semibold">Recent Consultations</h4>
             <div className="space-y-2 text-sm">
               <div className="rounded-lg border border-border p-3">
-                <div className="font-medium">10 januari 2024</div>
-                <div className="text-muted-foreground">Routine controle</div>
+                <div className="font-medium">January 10, 2024</div>
+                <div className="text-muted-foreground">Routine checkup</div>
               </div>
               <div className="rounded-lg border border-border p-3">
                 <div className="font-medium">15 oktober 2023</div>

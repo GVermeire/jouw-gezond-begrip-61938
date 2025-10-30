@@ -77,7 +77,7 @@ serve(async (req) => {
     const formData = new FormData();
     formData.append('file', audioData, 'audio.webm');
     formData.append('model', 'whisper-1');
-    formData.append('language', 'nl');
+    formData.append('language', 'en');
 
     const transcriptionResponse = await fetch('https://api.openai.com/v1/audio/transcriptions', {
       method: 'POST',
@@ -94,19 +94,19 @@ serve(async (req) => {
     }
 
     const { text: rawTranscript } = await transcriptionResponse.json();
-    console.log('Transcription complete, generating SOEP summary');
+    console.log('Transcription complete, generating SOAP summary');
 
-    // Generate SOEP format summary with SNOMED codes
-    const soepSummary = await generateSoepSummary(rawTranscript, OPENAI_API_KEY);
+    // Generate SOAP format summary with SNOMED codes
+    const soapSummary = await generateSoapSummary(rawTranscript, OPENAI_API_KEY);
 
-    console.log('SOEP summary with SNOMED codes generated, updating database');
+    console.log('SOAP summary with SNOMED codes generated, updating database');
 
-    // Update consultation record with SOEP summary
+    // Update consultation record with SOAP summary
     const { error: updateError } = await supabase
       .from('consultations')
       .update({
         transcript: rawTranscript,
-        summary_simple: soepSummary,
+        summary_simple: soapSummary,
         summary_detailed: null,
         summary_technical: null,
       })
@@ -123,7 +123,7 @@ serve(async (req) => {
       JSON.stringify({ 
         success: true,
         transcript: rawTranscript,
-        soep_summary: soepSummary
+        soap_summary: soapSummary
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
@@ -141,37 +141,37 @@ serve(async (req) => {
   }
 });
 
-async function generateSoepSummary(transcript: string, apiKey: string): Promise<string> {
-  const prompt = `Maak een gestructureerde samenvatting van dit consultatie gesprek in SOEP-formaat (Subjectief, Objectief, Evaluatie, Plan).
+async function generateSoapSummary(transcript: string, apiKey: string): Promise<string> {
+  const prompt = `Create a structured summary of this consultation conversation in SOAP format (Subjective, Objective, Assessment, Plan).
 
-Gebruik deze structuur en voeg relevante SNOMED-CT codes toe:
+Use this structure and add relevant SNOMED-CT codes:
 
-S (Subjectief):
-- Klachten en symptomen zoals de patiënt ze beschrijft
-- Anamnese
+S (Subjective):
+- Complaints and symptoms as described by the patient
+- Medical history
 
-O (Objectief):
-- Lichamelijk onderzoek
-- Metingen (bloeddruk, temperatuur, etc.)
-- Observaties
+O (Objective):
+- Physical examination
+- Measurements (blood pressure, temperature, etc.)
+- Observations
 
-E (Evaluatie):
-- Diagnose of differentiaaldiagnose
-- Interpretatie van bevindingen
-- SNOMED-CT codes voor diagnoses
+A (Assessment):
+- Diagnosis or differential diagnosis
+- Interpretation of findings
+- SNOMED-CT codes for diagnoses
 
 P (Plan):
-- Behandeling
-- Medicatie (met SNOMED-CT codes indien van toepassing)
-- Follow-up afspraken
-- Adviezen
+- Treatment
+- Medication (with SNOMED-CT codes if applicable)
+- Follow-up appointments
+- Advice
 
 SNOMED-CT Codes:
-Lijst hier alle relevante SNOMED-CT codes op voor:
+List all relevant SNOMED-CT codes for:
 - Diagnoses
 - Procedures
-- Bevindingen
-- Medicatie
+- Findings
+- Medication
 
 Transcript:
 ${transcript}`;
@@ -185,7 +185,7 @@ ${transcript}`;
     body: JSON.stringify({
       model: 'gpt-4o-mini',
       messages: [
-        { role: 'system', content: 'Je bent een medische assistent die helpt met het structureren van consultaties volgens het SOEP-formaat in het Nederlands. Je voegt ook relevante SNOMED-CT codes toe voor diagnoses, procedures en medicatie.' },
+        { role: 'system', content: 'You are a medical assistant that helps structure consultations according to the SOAP format in English. You also add relevant SNOMED-CT codes for diagnoses, procedures, and medication.' },
         { role: 'user', content: prompt }
       ],
       temperature: 0.3,
